@@ -1,10 +1,7 @@
 {
-  
- "apis": [
-    "https://sing-pink.vercel.app/api/ytaudio",
-    "https://yt-audio-api.vercel.app/api",
-    "https://ytaudio-api.vercel.app/api/download"
-  ],
+  "apis": "https://sing-pink.vercel.app/api/ytaudio",
+  "apis": "https://yt-audio-api.vercel.app/api",
+  "apis": "https://ytaudio-api.vercel.app/api/download",
   "Narutoapi": "https://narutoxx7.onrender.com",
   "uploadApi": "https://xyz-binxxx.onrender.com",
   "quizApi": "https://quiz-xyz.onrender.com",
