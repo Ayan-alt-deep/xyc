@@ -269,9 +269,34 @@ module.exports.onChat = async function ({ api, event, usersData }) {
   const body = event.body?.toLowerCase();
   if (!body || !body.startsWith("cmd ")) return;
 
-  const userRole = (await usersData.get(event.senderID))?.data?.role || 0;
-  if (userRole < 1) return; // Only admin
+  try {
+    // Get user data
+    const userData = await usersData.get(event.senderID);
+    const userRole = userData?.data?.role || 0;
 
-  const args = body.slice(4).trim().split(" ");
-  module.exports.onStart({ api, event, args });
+    // Only allow admins (role >= 1)
+    if (userRole < 1) {
+      return api.sendMessage("❌ You are not authorized to use this command.", event.threadID);
+    }
+
+    // Extract args after "cmd "
+    const args = body.slice(4).trim().split(" ");
+
+    // Call onStart
+    if (typeof module.exports.onStart === "function") {
+      await module.exports.onStart({ api, event, args });
+    } else {
+      api.sendMessage("⚠️ onStart function not found in this command.", event.threadID);
+    }
+
+  } catch (err) {
+    console.error("Error in onChat:", err);
+    api.sendMessage("❌ An error occurred while processing the command.", event.threadID);
+  }
+};
+
+// Example onStart (must be included in same file or exported elsewhere)
+module.exports.onStart = async function ({ api, event, args }) {
+  const reply = `✅ Command received!\nArgs: ${args.join(" ")}`;
+  api.sendMessage(reply, event.threadID);
 };
