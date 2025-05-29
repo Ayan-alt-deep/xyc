@@ -9,255 +9,279 @@ const { configCommands } = global.GoatBot;
 const { log, loading, removeHomeDir } = global.utils;
 
 function getDomain(url) {
-	const regex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n]+)/im;
-	const match = url.match(regex);
-	return match ? match[1] : null;
+  const regex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n]+)/im;
+  const match = url.match(regex);
+  return match ? match[1] : null;
 }
 
 function isURL(str) {
-	try {
-		new URL(str);
-		return true;
-	}
-	catch (e) {
-		return false;
-	}
+  try {
+    new URL(str);
+    return true;
+  }
+  catch (e) {
+    return false;
+  }
 }
 
 module.exports = {
-	config: {
-		name: "cmd",
-		version: "1.16",
-		author: "NTKhang",
-		countDown: 5,
-		role: 2,
-		shortDescription: {
-			vi: "Quản lý command",
-			en: "Manage command"
-		},
-		longDescription: {
-			vi: "Quản lý các tệp lệnh của bạn",
-			en: "Manage your command files"
-		},
-		category: "owner",
-		guide: {
-			vi: "   {pn} load <tên file lệnh>"
-				+ "\n   {pn} loadAll"
-				+ "\n   {pn} install <url> <tên file lệnh>: Tải xuống và cài đặt một tệp lệnh từ một url, url là đường dẫn đến tệp lệnh (raw)"
-				+ "\n   {pn} install <tên file lệnh> <code>: Tải xuống và cài đặt một tệp lệnh từ một code, code là mã của lệnh",
-			en: "   {pn} load <command file name>"
-				+ "\n   {pn} loadAll"
-				+ "\n   {pn} install <url> <command file name>: Download and install a command file from a url, url is the path to the file (raw)"
-				+ "\n   {pn} install <command file name> <code>: Download and install a command file from a code, code is the code of the command"
-		}
-	},
+  config: {
+    name: "cmd",
+    version: "1.16",
+    author: "NTKhang",
+    countDown: 5,
+    role: 2,
+    shortDescription: {
+      vi: "Quản lý command",
+      en: "Manage command"
+    },
+    longDescription: {
+      vi: "Quản lý các tệp lệnh của bạn",
+      en: "Manage your command files"
+    },
+    category: "owner",
+    guide: {
+      vi: "   {pn} load <tên file lệnh>"
+        + "\n   {pn} loadAll"
+        + "\n   {pn} install <url> <tên file lệnh>: Tải xuống và cài đặt một tệp lệnh từ một url, url là đường dẫn đến tệp lệnh (raw)"
+        + "\n   {pn} install <tên file lệnh> <code>: Tải xuống và cài đặt một tệp lệnh từ một code, code là mã của lệnh",
+      en: "   load <command file name>"
+        + "\n   loadAll"
+        + "\n   install <url> <command file name>: Download and install a command file from a url, url is the path to the file (raw)"
+        + "\n   install <command file name> <code>: Download and install a command file from a code, code is the code of the command"
+    }
+  },
 
-	langs: {
-		vi: {
-			missingFileName: "⚠️ | Vui lòng nhập vào tên lệnh bạn muốn reload",
-			loaded: "✅ | Đã load command \"%1\" thành công",
-			loadedError: "❌ | Load command \"%1\" thất bại với lỗi\n%2: %3",
-			loadedSuccess: "✅ | Đã load thành công (%1) command",
-			loadedFail: "❌ | Load thất bại (%1) command\n%2",
-			openConsoleToSeeError: "👀 | Hãy mở console để xem chi tiết lỗi",
-			missingCommandNameUnload: "⚠️ | Vui lòng nhập vào tên lệnh bạn muốn unload",
-			unloaded: "✅ | Đã unload command \"%1\" thành công",
-			unloadedError: "❌ | Unload command \"%1\" thất bại với lỗi\n%2: %3",
-			missingUrlCodeOrFileName: "⚠️ | Vui lòng nhập vào url hoặc code và tên file lệnh bạn muốn cài đặt",
-			missingUrlOrCode: "⚠️ | Vui lòng nhập vào url hoặc code của tệp lệnh bạn muốn cài đặt",
-			missingFileNameInstall: "⚠️ | Vui lòng nhập vào tên file để lưu lệnh (đuôi .js)",
-			invalidUrl: "⚠️ | Vui lòng nhập vào url hợp lệ",
-			invalidUrlOrCode: "⚠️ | Không thể lấy được mã lệnh",
-			alreadExist: "⚠️ | File lệnh đã tồn tại, bạn có chắc chắn muốn ghi đè lên file lệnh cũ không?\nThả cảm xúc bất kì vào tin nhắn này để tiếp tục",
-			installed: "✅ | Đã cài đặt command \"%1\" thành công, file lệnh được lưu tại %2",
-			installedError: "❌ | Cài đặt command \"%1\" thất bại với lỗi\n%2: %3",
-			missingFile: "⚠️ | Không tìm thấy tệp lệnh \"%1\"",
-			invalidFileName: "⚠️ | Tên tệp lệnh không hợp lệ",
-			unloadedFile: "✅ | Đã unload lệnh \"%1\""
-		},
-		en: {
-			missingFileName: " >🎀 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐭𝐡𝐞 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐧𝐚𝐦𝐞 𝐲𝐨𝐮 𝐰𝐚𝐧𝐭 𝐭𝐨 𝐫𝐞𝐥𝐨𝐚𝐝 ",
-			loaded: " >🎀| 𝐥𝐨𝐚𝐝𝐞𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 \"%1\" 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲",
-			loadedError: "🐥 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐥𝐨𝐚𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 \"%1\" 𝐰𝐢𝐭𝐡 𝐞𝐫𝐫𝐨𝐫\n%2: %3",
-			loadedSuccess: " >🎀 | 𝐁𝐚𝐛𝐲 𝐓𝐡𝐢𝐬 𝐜𝐦𝐝 𝐡𝐚𝐬 𝐛𝐞𝐧 𝐥𝐨𝐚𝐝𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲(%1) 𝐜𝐨𝐦𝐦𝐚𝐧𝐝",
-			loadedFail: "🐥 | 𝐎𝐩𝐩𝐬 𝐛𝐚𝐤𝐚, 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐥𝐨𝐚𝐝 (%1) 𝐜𝐨𝐦𝐦𝐚𝐧𝐝\n%2",
-			openConsoleToSeeError: "👀 | 𝐨𝐩𝐞𝐧 𝐜𝐨𝐧𝐬𝐨𝐥𝐞 𝐭𝐨 𝐬𝐞𝐞 𝐞𝐫𝐫𝐨𝐫 𝐝𝐞𝐭𝐚𝐢𝐥𝐬",
-			missingCommandNameUnload: ">🎀 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐭𝐡𝐞 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐧𝐚𝐦𝐞 𝐲𝐨𝐮 𝐰𝐚𝐧𝐭 𝐭𝐨 𝐮𝐧𝐥𝐨𝐚𝐝",
-			unloaded: ">🎀 𝐁𝐛𝐲 𝐮𝐧𝐥𝐨𝐚𝐝𝐞𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 \"%1\" 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲",
-			unloadedError: ">🐥 𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐮𝐧𝐥𝐨𝐚𝐝 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 \"%1\" 𝐰𝐢𝐭𝐡 𝐞𝐫𝐫𝐨𝐫\n%2: %3",
-			missingUrlCodeOrFileName: ">🐥🎀 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐭𝐡𝐞 𝐔𝐫𝐥 𝐨𝐫 𝐜𝐨𝐝𝐞 𝐚𝐧𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞 𝐧𝐚𝐦𝐞 𝐲𝐨𝐮 𝐰𝐚𝐧𝐭 𝐭𝐨 𝐢𝐧𝐬𝐭𝐚𝐥𝐥 𝐁𝐛𝐲,🐥",
-			missingUrlOrCode: ">🐥🎀 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐭𝐡𝐞 𝐮𝐫𝐥 𝐨𝐫 𝐜𝐨𝐝𝐞 𝐨𝐟 𝐭𝐡𝐞 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞 𝐲𝐨𝐮 𝐰𝐚𝐧𝐭 𝐭𝐨 𝐢𝐧𝐬𝐭𝐚𝐥𝐥 𝐁𝐛𝐲,🐥🎀",
-			missingFileNameInstall: " >🐥🎀 𝐁𝐛𝐲, 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐭𝐡𝐞 𝐟𝐢𝐥𝐞 𝐧𝐚𝐦𝐞 𝐭𝐨 𝐬𝐚𝐯𝐞 𝐭𝐡𝐞 𝐜𝐨𝐦𝐦𝐚𝐧𝐝  (with .js extension)",
-			invalidUrl: ">🐥🎀 𝐁𝐛𝐲, 𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐚 𝐯𝐚𝐥𝐢𝐝 𝐮𝐫𝐥",
-			invalidUrlOrCode: ">🐥𝐔𝐧𝐚𝐛𝐥𝐞 𝐭𝐨 𝐠𝐞𝐭 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐜𝐨𝐝𝐞",
-			alreadExist: ">🎀🐥𝐛𝐛𝐲 𝐓𝐡𝐞 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞 𝐚𝐥𝐫𝐞𝐚𝐝𝐲 𝐞𝐱𝐢𝐬𝐭𝐬,𝐚𝐫𝐞 𝐲𝐨𝐮 𝐬𝐮𝐫𝐞 𝐲𝐨𝐮 𝐰𝐚𝐧𝐭 𝐭𝐨 𝐨𝐯𝐞𝐫𝐰𝐫𝐢𝐭𝐞 𝐭𝐡𝐞 𝐨𝐥𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞.?\n𝐑𝐞𝐚𝐜𝐭 𝐭𝐨 𝐭𝐡𝐢𝐬 𝐦𝐞𝐬𝐬𝐚𝐠𝐞 𝐭𝐨 𝐜𝐨𝐧𝐭𝐢𝐧𝐮𝐞",
-			installed: ">🎀🐥  𝐁𝐛𝐲,𝐈𝐧𝐬𝐭𝐚𝐥𝐥𝐞𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝\"%1\" 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲, 𝐓𝐡𝐞 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞 𝐢𝐬 𝐬𝐚𝐯𝐞𝐝 𝐚𝐭 %2",
-			installedError: "🎀🐥 𝐎𝐩𝐩𝐬 𝐛𝐚𝐤𝐚,𝐅𝐚𝐢𝐥𝐞𝐝 𝐭𝐨 𝐢𝐧𝐬𝐭𝐚𝐥𝐥 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 \"%1\" 𝐰𝐢𝐭𝐡 𝐞𝐫𝐫𝐨𝐫\n%2: %3",
-			missingFile: ">🐥🎀 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞 \"%1\" 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝",
-			invalidFileName: "🐥🎀 𝐈𝐧𝐯𝐚𝐥𝐢𝐝 𝐜𝐨𝐦𝐦𝐚𝐧𝐝 𝐟𝐢𝐥𝐞 𝐧𝐚𝐦𝐞 𝐁𝐛𝐲,🐥🎀",
-			unloadedFile: ">🎀🐥𝐮𝐧𝐥𝐨𝐚𝐝𝐞𝐝 𝐂𝐨𝐦𝐦𝐚𝐧𝐝 \"%1\""
-		}
-	},
+  langs: {
+    vi: {
+      missingFileName: "⚠️ | Vui lòng nhập vào tên lệnh bạn muốn reload",
+      loaded: "✅ | Đã load command \"%1\" thành công",
+      loadedError: "❌ | Load command \"%1\" thất bại với lỗi\n%2: %3",
+      loadedSuccess: "✅ | Đã load thành công (%1) command",
+      loadedFail: "❌ | Load thất bại (%1) command\n%2",
+      openConsoleToSeeError: "👀 | Hãy mở console để xem chi tiết lỗi",
+      missingCommandNameUnload: "⚠️ | Vui lòng nhập vào tên lệnh bạn muốn unload",
+      unloaded: "✅ | Đã unload command \"%1\" thành công",
+      unloadedError: "❌ | Unload command \"%1\" thất bại với lỗi\n%2: %3",
+      missingUrlCodeOrFileName: "⚠️ | Vui lòng nhập vào url hoặc code và tên file lệnh bạn muốn cài đặt",
+      missingUrlOrCode: "⚠️ | Vui lòng nhập vào url hoặc code của tệp lệnh bạn muốn cài đặt",
+      missingFileNameInstall: "⚠️ | Vui lòng nhập vào tên file để lưu lệnh (đuôi .js)",
+      invalidUrl: "⚠️ | Vui lòng nhập vào url hợp lệ",
+      invalidUrlOrCode: "⚠️ | Không thể lấy được mã lệnh",
+      alreadExist: "⚠️ | File lệnh đã tồn tại, bạn có chắc chắn muốn ghi đè lên file lệnh cũ không?\nThả cảm xúc bất kì vào tin nhắn này để tiếp tục",
+      installed: "✅ | Đã cài đặt command \"%1\" thành công, file lệnh được lưu tại %2",
+      installedError: "❌ | Cài đặt command \"%1\" thất bại với lỗi\n%2: %3",
+      missingFile: "⚠️ | Không tìm thấy tệp lệnh \"%1\"",
+      invalidFileName: "⚠️ | Tên tệp lệnh không hợp lệ",
+      unloadedFile: "✅ | Đã unload lệnh \"%1\""
+    },
+    en: {
+      missingFileName: ">🎀 Please enter the command name you want to reload",
+      loaded: ">🎀| Loaded command \"%1\" successfully",
+      loadedError: "🐥 Failed to load command \"%1\" with error\n%2: %3",
+      loadedSuccess: ">🎀 | Baby this cmd has been loaded successfully (%1) command",
+      loadedFail: "🐥 | Opps baka, Failed to load (%1) command\n%2",
+      openConsoleToSeeError: "👀 | Open console to see error details",
+      missingCommandNameUnload: ">🎀 Please enter the command name you want to unload",
+      unloaded: ">🎀 Bby unloaded command \"%1\" successfully",
+      unloadedError: ">🐥 Failed to unload Command \"%1\" with error\n%2: %3",
+      missingUrlCodeOrFileName: ">🐥🎀 Please enter the Url or code and command file name you want to install Bby,🐥",
+      missingUrlOrCode: ">🐥🎀 Please enter the url or code of the command file you want to install Bby,🐥🎀",
+      missingFileNameInstall: ">🐥🎀 Bby, Please enter the file name to save the command (with .js extension)",
+      invalidUrl: ">🐥🎀 Bby, Please enter a valid url",
+      invalidUrlOrCode: ">🐥 Unable to get Command code",
+      alreadExist: ">🎀🐥 Bby The command file already exists, are you sure you want to overwrite the old command file?\nReact to this message to continue",
+      installed: ">🎀🐥 Bby, Installed command \"%1\" successfully, The command file is saved at %2",
+      installedError: "🎀🐥 Opps baka, Failed to install command \"%1\" with error\n%2: %3",
+      missingFile: ">🐥🎀 Command file \"%1\" not found",
+      invalidFileName: "🐥🎀 Invalid command file name Bby,🐥🎀",
+      unloadedFile: ">🎀🐥 Unloaded Command \"%1\""
+    }
+  },
 
-	onStart: async ({ args, message, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, event, commandName, getLang }) => {
-		const { unloadScripts, loadScripts } = global.utils;
-		if (
-			args[0] == "load"
-			&& args.length == 2
-		) {
-			if (!args[1])
-				return message.reply(getLang("missingFileName"));
-			const infoLoad = loadScripts("cmds", args[1], log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang);
-			if (infoLoad.status == "success")
-				message.reply(getLang("loaded", infoLoad.name));
-			else {
-				message.reply(
-					getLang("loadedError", infoLoad.name, infoLoad.error.name, infoLoad.error.message)
-					+ "\n" + infoLoad.error.stack
-				);
-				console.log(infoLoad.errorWithThoutRemoveHomeDir);
-			}
-		}
-		else if (
-			(args[0] || "").toLowerCase() == "loadall"
-			|| (args[0] == "load" && args.length > 2)
-		) {
-			const fileNeedToLoad = args[0].toLowerCase() == "loadall" ?
-				fs.readdirSync(__dirname)
-					.filter(file =>
-						file.endsWith(".js") &&
-						!file.match(/(eg)\.js$/g) &&
-						(process.env.NODE_ENV == "development" ? true : !file.match(/(dev)\.js$/g)) &&
-						!configCommands.commandUnload?.includes(file)
-					)
-					.map(item => item = item.split(".")[0]) :
-				args.slice(1);
-			const arraySucces = [];
-			const arrayFail = [];
+  onStart: async ({ args, message, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, event, commandName, getLang }) => {
+    const { unloadScripts, loadScripts } = global.utils;
+    
+    // Check if the command was triggered without "cmd" prefix
+    const isDirectCommand = !event.body.toLowerCase().startsWith("cmd") && 
+      ["load", "loadall", "unload", "install"].includes(args[0]?.toLowerCase());
+    
+    if (isDirectCommand) {
+      // If it's a direct command, we need to process it as if "cmd" was the first argument
+      args = [args[0], ...args.slice(1)];
+    }
+    
+    if (args[0] == "load" && args.length == 2) {
+      if (!args[1])
+        return message.reply(getLang("missingFileName"));
+      
+      const infoLoad = loadScripts("cmds", args[1], log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang);
+      
+      if (infoLoad.status == "success")
+        message.reply(getLang("loaded", infoLoad.name));
+      else {
+        message.reply(
+          getLang("loadedError", infoLoad.name, infoLoad.error.name, infoLoad.error.message)
+          + "\n" + infoLoad.error.stack
+        );
+        console.log(infoLoad.errorWithThoutRemoveHomeDir);
+      }
+    }
+    else if ((args[0] || "").toLowerCase() == "loadall" || (args[0] == "load" && args.length > 2)) {
+      const fileNeedToLoad = args[0].toLowerCase() == "loadall" ?
+        fs.readdirSync(__dirname)
+          .filter(file =>
+            file.endsWith(".js") &&
+            !file.match(/(eg)\.js$/g) &&
+            (process.env.NODE_ENV == "development" ? true : !file.match(/(dev)\.js$/g)) &&
+            !configCommands.commandUnload?.includes(file)
+          )
+          .map(item => item = item.split(".")[0]) :
+        args.slice(1);
+      
+      const arraySucces = [];
+      const arrayFail = [];
 
-			for (const fileName of fileNeedToLoad) {
-				const infoLoad = loadScripts("cmds", fileName, log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang);
-				if (infoLoad.status == "success")
-					arraySucces.push(fileName);
-				else
-					arrayFail.push(` ❗ ${fileName} => ${infoLoad.error.name}: ${infoLoad.error.message}`);
-			}
+      for (const fileName of fileNeedToLoad) {
+        const infoLoad = loadScripts("cmds", fileName, log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang);
+        if (infoLoad.status == "success")
+          arraySucces.push(fileName);
+        else
+          arrayFail.push(` ❗ ${fileName} => ${infoLoad.error.name}: ${infoLoad.error.message}`);
+      }
 
-			let msg = "";
-			if (arraySucces.length > 0)
-				msg += getLang("loadedSuccess", arraySucces.length);
-			if (arrayFail.length > 0) {
-				msg += (msg ? "\n" : "") + getLang("loadedFail", arrayFail.length, arrayFail.join("\n"));
-				msg += "\n" + getLang("openConsoleToSeeError");
-			}
+      let msg = "";
+      if (arraySucces.length > 0)
+        msg += getLang("loadedSuccess", arraySucces.length);
+      if (arrayFail.length > 0) {
+        msg += (msg ? "\n" : "") + getLang("loadedFail", arrayFail.length, arrayFail.join("\n"));
+        msg += "\n" + getLang("openConsoleToSeeError");
+      }
 
-			message.reply(msg);
-		}
-		else if (args[0] == "unload") {
-			if (!args[1])
-				return message.reply(getLang("missingCommandNameUnload"));
-			const infoUnload = unloadScripts("cmds", args[1], configCommands, getLang);
-			infoUnload.status == "success" ?
-				message.reply(getLang("unloaded", infoUnload.name)) :
-				message.reply(getLang("unloadedError", infoUnload.name, infoUnload.error.name, infoUnload.error.message));
-		}
-		else if (args[0] == "install") {
-			let url = args[1];
-			let fileName = args[2];
-			let rawCode;
+      message.reply(msg);
+    }
+    else if (args[0] == "unload") {
+      if (!args[1])
+        return message.reply(getLang("missingCommandNameUnload"));
+      
+      const infoUnload = unloadScripts("cmds", args[1], configCommands, getLang);
+      infoUnload.status == "success" ?
+        message.reply(getLang("unloaded", infoUnload.name)) :
+        message.reply(getLang("unloadedError", infoUnload.name, infoUnload.error.name, infoUnload.error.message));
+    }
+    else if (args[0] == "install") {
+      let url = args[1];
+      let fileName = args[2];
+      let rawCode;
 
-			if (!url || !fileName)
-				return message.reply(getLang("missingUrlCodeOrFileName"));
+      if (!url || !fileName)
+        return message.reply(getLang("missingUrlCodeOrFileName"));
 
-			if (
-				url.endsWith(".js")
-				&& !isURL(url)
-			) {
-				const tmp = fileName;
-				fileName = url;
-				url = tmp;
-			}
+      if (url.endsWith(".js") && !isURL(url)) {
+        const tmp = fileName;
+        fileName = url;
+        url = tmp;
+      }
 
-			if (url.match(/(https?:\/\/(?:www\.|(?!www)))/)) {
-				global.utils.log.dev("install", "url", url);
-				if (!fileName || !fileName.endsWith(".js"))
-					return message.reply(getLang("missingFileNameInstall"));
+      if (url.match(/(https?:\/\/(?:www\.|(?!www)))/)) {
+        global.utils.log.dev("install", "url", url);
+        if (!fileName || !fileName.endsWith(".js"))
+          return message.reply(getLang("missingFileNameInstall"));
 
-				const domain = getDomain(url);
-				if (!domain)
-					return message.reply(getLang("invalidUrl"));
+        const domain = getDomain(url);
+        if (!domain)
+          return message.reply(getLang("invalidUrl"));
 
-				if (domain == "pastebin.com") {
-					const regex = /https:\/\/pastebin\.com\/(?!raw\/)(.*)/;
-					if (url.match(regex))
-						url = url.replace(regex, "https://pastebin.com/raw/$1");
-					if (url.endsWith("/"))
-						url = url.slice(0, -1);
-				}
-				else if (domain == "github.com") {
-					const regex = /https:\/\/github\.com\/(.*)\/blob\/(.*)/;
-					if (url.match(regex))
-						url = url.replace(regex, "https://raw.githubusercontent.com/$1/$2");
-				}
+        if (domain == "pastebin.com") {
+          const regex = /https:\/\/pastebin\.com\/(?!raw\/)(.*)/;
+          if (url.match(regex))
+            url = url.replace(regex, "https://pastebin.com/raw/$1");
+          if (url.endsWith("/"))
+            url = url.slice(0, -1);
+        }
+        else if (domain == "github.com") {
+          const regex = /https:\/\/github\.com\/(.*)\/blob\/(.*)/;
+          if (url.match(regex))
+            url = url.replace(regex, "https://raw.githubusercontent.com/$1/$2");
+        }
 
-				rawCode = (await axios.get(url)).data;
+        rawCode = (await axios.get(url)).data;
 
-				if (domain == "savetext.net") {
-					const $ = cheerio.load(rawCode);
-					rawCode = $("#content").text();
-				}
-			}
-			else {
-				global.utils.log.dev("install", "code", args.slice(1).join(" "));
-				if (args[args.length - 1].endsWith(".js")) {
-					fileName = args[args.length - 1];
-					rawCode = event.body.slice(event.body.indexOf('install') + 7, event.body.indexOf(fileName) - 1);
-				}
-				else if (args[1].endsWith(".js")) {
-					fileName = args[1];
-					rawCode = event.body.slice(event.body.indexOf(fileName) + fileName.length + 1);
-				}
-				else
-					return message.reply(getLang("missingFileNameInstall"));
-			}
+        if (domain == "savetext.net") {
+          const $ = cheerio.load(rawCode);
+          rawCode = $("#content").text();
+        }
+      }
+      else {
+        global.utils.log.dev("install", "code", args.slice(1).join(" "));
+        if (args[args.length - 1].endsWith(".js")) {
+          fileName = args[args.length - 1];
+          rawCode = event.body.slice(event.body.indexOf('install') + 7, event.body.indexOf(fileName) - 1);
+        }
+        else if (args[1].endsWith(".js")) {
+          fileName = args[1];
+          rawCode = event.body.slice(event.body.indexOf(fileName) + fileName.length + 1);
+        }
+        else
+          return message.reply(getLang("missingFileNameInstall"));
+      }
 
-			if (!rawCode)
-				return message.reply(getLang("invalidUrlOrCode"));
+      if (!rawCode)
+        return message.reply(getLang("invalidUrlOrCode"));
 
-			if (fs.existsSync(path.join(__dirname, fileName)))
-				return message.reply(getLang("alreadExist"), (err, info) => {
-					global.GoatBot.onReaction.set(info.messageID, {
-						commandName,
-						messageID: info.messageID,
-						type: "install",
-						author: event.senderID,
-						data: {
-							fileName,
-							rawCode
-						}
-					});
-				});
-			else {
-				const infoLoad = loadScripts("cmds", fileName, log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang, rawCode);
-				infoLoad.status == "success" ?
-					message.reply(getLang("installed", infoLoad.name, path.join(__dirname, fileName).replace(process.cwd(), ""))) :
-					message.reply(getLang("installedError", infoLoad.name, infoLoad.error.name, infoLoad.error.message));
-			}
-		}
-		else
-			message.SyntaxError();
-	},
+      if (fs.existsSync(path.join(__dirname, fileName)))
+        return message.reply(getLang("alreadExist"), (err, info) => {
+          global.GoatBot.onReaction.set(info.messageID, {
+            commandName,
+            messageID: info.messageID,
+            type: "install",
+            author: event.senderID,
+            data: {
+              fileName,
+              rawCode
+            }
+          });
+        });
+      else {
+        const infoLoad = loadScripts("cmds", fileName, log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang, rawCode);
+        infoLoad.status == "success" ?
+          message.reply(getLang("installed", infoLoad.name, path.join(__dirname, fileName).replace(process.cwd(), "")) :
+          message.reply(getLang("installedError", infoLoad.name, infoLoad.error.name, infoLoad.error.message));
+      }
+    }
+    else
+      message.SyntaxError();
+  },
 
-	onReaction: async function ({ Reaction, message, event, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang }) {
-		const { loadScripts } = global.utils;
-		const { author, data: { fileName, rawCode } } = Reaction;
-		if (event.userID != author)
-			return;
-		const infoLoad = loadScripts("cmds", fileName, log, configCommands, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang, rawCode);
-		infoLoad.status == "success" ?
-			message.reply(getLang("installed", infoLoad.name, path.join(__dirname, fileName).replace(process.cwd(), ""))) :
-			message.reply(getLang("installedError", infoLoad.name, infoLoad.error.name, infoLoad.error.message));
-	}
+  onReaction: async function ({ Reaction, message, event, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, getLang }) {
+    const { loadScripts } = global.utils;
+    const { author, data: { fileName, rawCode } } = Reaction;
+    
+    if (event.userID != author)
+      return;
+      
+    const infoLoad = loadScripts(
+      "cmds", 
+      fileName, 
+      log, 
+      configCommands, 
+      api, 
+      threadModel, 
+      userModel, 
+      dashBoardModel, 
+      globalModel, 
+      threadsData, 
+      usersData, 
+      dashBoardData, 
+      globalData, 
+      getLang, 
+      rawCode
+    );
+    
+    infoLoad.status == "success" 
+      ? message.reply(getLang("installed", infoLoad.name, path.join(__dirname, fileName).replace(process.cwd(), ""))) 
+      : message.reply(getLang("installedError", infoLoad.name, infoLoad.error.name, infoLoad.error.message));
+  }
 };
 
 
