@@ -1,4 +1,5 @@
 { 
+  "whatsong": "https://mahivx3-songfinder.up.railway.app/api/whatsong",
   "catbox": "https://catbox.moe/user/api.php",
   "lk": "https://lk-x.onrender.com",
   "apis": "https://sing-pink.vercel.app/api/ytaudio",
